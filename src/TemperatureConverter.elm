@@ -31,13 +31,11 @@ main =
 
 type alias Model =
   { celsius: Float
-  , fahrenheit: Float
   }
 
 init : Model
 init =
   { celsius = 0.0
-  , fahrenheit = fahrenheitFromCelsius 0.0
   }
 
 type Msg
@@ -52,9 +50,9 @@ update : Msg -> Model -> Model
 update msg model =
   case msg of
     Celsius c ->
-      { model | celsius = c, fahrenheit = fahrenheitFromCelsius c }
+      { model | celsius = c }
     Fahrenheit f ->
-      { model | celsius = celsiusFromFahrenheit f, fahrenheit = f }
+      { model | celsius = celsiusFromFahrenheit f }
 
 view : Model -> Html Msg
 view model =
@@ -62,6 +60,6 @@ view model =
     [ input [ onInput (toFloat Celsius), value (String.fromFloat model.celsius) ] []
     , text "Celsius"
     , span [ style "padding" "0 10px" ] [ text "=" ]
-    , input [ onInput (toFloat Fahrenheit), value (String.fromFloat model.fahrenheit) ] []
+    , input [ onInput (toFloat Fahrenheit), value (String.fromFloat (fahrenheitFromCelsius model.celsius)) ] []
     , text "Fahrenheit"
     ]
