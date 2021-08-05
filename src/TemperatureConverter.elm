@@ -55,9 +55,9 @@ canParse s =
      Just _ -> True
      Nothing -> False
 
-tryParse : String -> (Float -> Float) -> String -> String
-tryParse v conversion default =
-  case String.toFloat v of
+tryParseWith : (Float -> Float) -> String -> String -> String
+tryParseWith conversion default value =
+  case String.toFloat value of
      Just f -> String.fromFloat <| conversion <| f
      Nothing -> default
 
@@ -65,9 +65,9 @@ update : Msg -> Model -> Model
 update msg model =
   case msg of
     Celsius c ->
-      { model | celsius = c, fahrenheit = tryParse c fahrenheitFromCelsius model.fahrenheit }
+      { model | celsius = c, fahrenheit = tryParseWith fahrenheitFromCelsius model.fahrenheit c }
     Fahrenheit f ->
-      { model | fahrenheit = f, celsius = tryParse f celsiusFromFahrenheit model.celsius }
+      { model | fahrenheit = f, celsius = tryParseWith celsiusFromFahrenheit model.celsius f }
 
 view : Model -> Html Msg
 view model =
