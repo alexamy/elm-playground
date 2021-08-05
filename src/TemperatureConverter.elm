@@ -8,3 +8,25 @@ and the dual direction is F = C * (9/5) + 32.
 -}
 
 module TemperatureConverter exposing (..)
+
+import Browser
+import Html exposing (div, text, span, input)
+import Html.Attributes exposing (value)
+import Html.Attributes exposing (style)
+
+initState = 0
+
+main =
+  Browser.sandbox { init = initState, update = update, view = view }
+
+update msg model =
+  model
+
+view model =
+  div []
+    [ input [ value (String.fromInt model) ] []
+    , text "Celsius"
+    , span [ style "padding" "0 10px" ] [ text "=" ]
+    , input [ value (String.fromInt model) ] []
+    , text "Fahrenheit"
+    ]
