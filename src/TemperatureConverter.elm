@@ -58,7 +58,7 @@ canParse s =
 tryParseWith : (Float -> Float) -> String -> String -> String
 tryParseWith conversion default value =
   case String.toFloat value of
-     Just f -> String.fromFloat <| conversion <| f
+     Just f -> f |> conversion |> String.fromFloat
      Nothing -> default
 
 update : Msg -> Model -> Model
