@@ -5,6 +5,11 @@ When the user enters a numerical value into TC the corresponding value in TF is 
 When the user enters a non-numerical string into TC the value in TF is not updated and vice versa.
 The formula for converting a temperature C in Celsius into a temperature F in Fahrenheit is C = (F - 32) * (5/9)
 and the dual direction is F = C * (9/5) + 32.
+
+---I will skip that part---
+When the user enters a non-numerical string into TC the value in TF is not updated and vice versa.
+
+Why do I need to have non-meaningful values anyway?
 -}
 
 module TemperatureConverter exposing (..)
@@ -39,6 +44,7 @@ type Msg
   = Celsius Float
   | Fahrenheit Float
 
+toFloat : (Float -> Msg) -> String -> Msg
 toFloat constructor =
   \s -> constructor (Maybe.withDefault 0 (String.toFloat s))
 
