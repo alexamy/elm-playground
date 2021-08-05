@@ -18,6 +18,7 @@ import Browser
 import Html exposing (Html, div, text, span, input)
 import Html.Attributes exposing (value, style)
 import Html.Events exposing (onInput)
+import Html.Events exposing (onFocus)
 
 celsiusFromFahrenheit : Float -> Float
 celsiusFromFahrenheit f =
@@ -31,30 +32,50 @@ main =
   Browser.sandbox { init = init, update = update, view = view }
 
 type alias Model =
-  Float
+  { celsius: String
+  , fahrenheit: String
+  }
+
+initCelsius : Float
+initCelsius = 0.0
 
 init : Model
 init =
-  0.0
+  { celsius = String.fromFloat initCelsius,
+    fahrenheit = String.fromFloat <| fahrenheitFromCelsius <| initCelsius
+  }
 
 type Msg
-  = Celsius Float
-  | Fahrenheit Float
+  = Celsius String
+  | Fahrenheit String
+
+canParse : String -> Bool
+canParse s =
+  case String.toFloat s of
+     Just _ -> True
+     Nothing -> False
+
+tryParseWith : (Float -> Float) -> String -> String -> String
+tryParseWith conversion default value =
+  case String.toFloat value of
+     Just f -> f |> conversion |> String.fromFloat
+     Nothing -> default
 
 update : Msg -> Model -> Model
-update msg _ =
+update msg model =
   case msg of
     Celsius c ->
-      c
+      { model | celsius = c, fahrenheit = tryParseWith fahrenheitFromCelsius model.fahrenheit c }
     Fahrenheit f ->
-      celsiusFromFahrenheit f
+      { model | fahrenheit = f, celsius = tryParseWith celsiusFromFahrenheit model.celsius f }
 
 view : Model -> Html Msg
 view model =
   div []
     [ input
-        [ onInput (Celsius << Maybe.withDefault 0 << String.toFloat)
-        , value (String.fromFloat model)
+        [ onInput Celsius
+        , onFocus (Celsius model.celsius)
+        , value model.celsius
         ]
         []
     , text "Celsius"
@@ -62,8 +83,9 @@ view model =
         [ style "padding" "0 10px" ]
         [ text "=" ]
     , input
-        [ onInput (Fahrenheit << Maybe.withDefault 0 << String.toFloat)
-        , value (String.fromFloat <| fahrenheitFromCelsius <| model)
+        [ onInput Fahrenheit
+        , onFocus (Fahrenheit model.fahrenheit)
+        , value model.fahrenheit
         ]
         []
     , text "Fahrenheit"
