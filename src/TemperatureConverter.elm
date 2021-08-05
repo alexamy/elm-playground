@@ -13,6 +13,7 @@ import Browser
 import Html exposing (Html, div, text, span, input)
 import Html.Attributes exposing (value)
 import Html.Attributes exposing (style)
+import Html.Events exposing (onInput)
 
 celsiusFromFahrenheit f =
   (f - 32) * 5 / 9
@@ -31,23 +32,30 @@ type alias Model =
 init : Model
 init =
   { celsius = 0.0
-  , fahrenheit = celsiusFromFahrenheit 0.0
+  , fahrenheit = fahrenheitFromCelsius 0.0
   }
 
 type Msg
   = Celsius Float
   | Fahrenheit Float
 
+toFloat constructor =
+  \s -> constructor (Maybe.withDefault 0 (String.toFloat s))
+
 update : Msg -> Model -> Model
 update msg model =
-  model
+  case msg of
+    Celsius c ->
+      { model | celsius = c, fahrenheit = fahrenheitFromCelsius c }
+    Fahrenheit f ->
+      { model | celsius = celsiusFromFahrenheit f, fahrenheit = f }
 
 view : Model -> Html Msg
 view model =
   div []
-    [ input [ value (String.fromFloat model.celsius) ] []
+    [ input [ onInput (toFloat Celsius), value (String.fromFloat model.celsius) ] []
     , text "Celsius"
     , span [ style "padding" "0 10px" ] [ text "=" ]
-    , input [ value (String.fromFloat model.fahrenheit) ] []
+    , input [ onInput (toFloat Fahrenheit), value (String.fromFloat model.fahrenheit) ] []
     , text "Fahrenheit"
     ]
