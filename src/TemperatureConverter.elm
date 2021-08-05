@@ -16,8 +16,7 @@ module TemperatureConverter exposing (..)
 
 import Browser
 import Html exposing (Html, div, text, span, input)
-import Html.Attributes exposing (value)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (value, style)
 import Html.Events exposing (onInput)
 
 celsiusFromFahrenheit f =
@@ -40,10 +39,6 @@ type Msg
   = Celsius Float
   | Fahrenheit Float
 
-toFloat : (Float -> Msg) -> String -> Msg
-toFloat constructor =
-  \s -> constructor (Maybe.withDefault 0 (String.toFloat s))
-
 update : Msg -> Model -> Model
 update msg model =
   case msg of
@@ -56,15 +51,15 @@ view : Model -> Html Msg
 view model =
   div []
     [ input
-      [ onInput (toFloat Celsius)
+      [ onInput (Celsius << Maybe.withDefault 0 << String.toFloat)
       , value (String.fromFloat model)
       ]
       []
     , text "Celsius"
     , span [ style "padding" "0 10px" ] [ text "=" ]
     , input
-      [ onInput (toFloat Fahrenheit)
-      , value (String.fromFloat (fahrenheitFromCelsius model))
+      [ onInput (Fahrenheit << Maybe.withDefault 0 << String.toFloat)
+      , value (String.fromFloat <| fahrenheitFromCelsius <| model)
       ]
       []
     , text "Fahrenheit"
