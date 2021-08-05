@@ -19,9 +19,11 @@ import Html exposing (Html, div, text, span, input)
 import Html.Attributes exposing (value, style)
 import Html.Events exposing (onInput)
 
+celsiusFromFahrenheit : Float -> Float
 celsiusFromFahrenheit f =
   (f - 32) * 5 / 9
 
+fahrenheitFromCelsius : Float -> Float
 fahrenheitFromCelsius c =
   c * 9 / 5 + 32
 
