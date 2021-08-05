@@ -18,6 +18,7 @@ import Browser
 import Html exposing (Html, div, text, span, input)
 import Html.Attributes exposing (value, style)
 import Html.Events exposing (onInput)
+import Html.Events exposing (onFocus)
 
 celsiusFromFahrenheit : Float -> Float
 celsiusFromFahrenheit f =
@@ -73,6 +74,7 @@ view model =
   div []
     [ input
         [ onInput Celsius
+        , onFocus (Celsius model.celsius)
         , value model.celsius
         ]
         []
@@ -82,6 +84,7 @@ view model =
         [ text "=" ]
     , input
         [ onInput Fahrenheit
+        , onFocus (Fahrenheit model.fahrenheit)
         , value model.fahrenheit
         ]
         []
