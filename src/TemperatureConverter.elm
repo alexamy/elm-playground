@@ -14,20 +14,37 @@ import Html exposing (div, text, span, input)
 import Html.Attributes exposing (value)
 import Html.Attributes exposing (style)
 
+celsiusFromFahrenheit f =
+  (f - 32) * 5 / 9
+
+fahrenheitFromCelsius c =
+  c * 9 / 5 + 32
+
 main =
   Browser.sandbox { init = init, update = update, view = view }
 
+type alias Model =
+  { celsius: Float
+  , fahrenheit: Float
+  }
+
 init =
-  0
+  { celsius = 0.0
+  , fahrenheit = celsiusFromFahrenheit 0.0
+  }
+
+type Msg
+  = Celsius Float
+  | Fahrenheit Float
 
 update msg model =
   model
 
 view model =
   div []
-    [ input [ value (String.fromInt model) ] []
+    [ input [ value (String.fromFloat model.celsius) ] []
     , text "Celsius"
     , span [ style "padding" "0 10px" ] [ text "=" ]
-    , input [ value (String.fromInt model) ] []
+    , input [ value (String.fromFloat model.fahrenheit) ] []
     , text "Fahrenheit"
     ]
