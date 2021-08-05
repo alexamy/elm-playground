@@ -53,9 +53,14 @@ update : Msg -> Model -> Model
 update msg model =
   case msg of
     Celsius c ->
-      { model | celsius = c }
+      { model | celsius = c, fahrenheit = if tryParse c then String.fromFloat <| fahrenheitFromCelsius <| Maybe.withDefault 0 <| String.toFloat <| c else model.fahrenheit }
     Fahrenheit f ->
-      { model | fahrenheit = f }
+      { model | fahrenheit = f, celsius = if tryParse f then String.fromFloat <| celsiusFromFahrenheit <| Maybe.withDefault 0 <| String.toFloat <| f else model.celsius }
+
+tryParse s =
+  case String.toFloat s of
+     Just f -> True
+     Nothing -> False
 
 view : Model -> Html Msg
 view model =
