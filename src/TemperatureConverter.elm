@@ -18,6 +18,7 @@ import Browser
 import Html exposing (Html, div, text, span, input)
 import Html.Attributes exposing (value, style)
 import Html.Events exposing (onInput)
+import Debug exposing (toString)
 
 celsiusFromFahrenheit : Float -> Float
 celsiusFromFahrenheit f =
@@ -31,30 +32,37 @@ main =
   Browser.sandbox { init = init, update = update, view = view }
 
 type alias Model =
-  Float
+  { celsius: String
+  , fahrenheit: String
+  }
+
+initCelsius : Float
+initCelsius = 0.0
 
 init : Model
 init =
-  0.0
+  { celsius = toString initCelsius,
+    fahrenheit = toString <| fahrenheitFromCelsius <| initCelsius
+  }
 
 type Msg
-  = Celsius Float
-  | Fahrenheit Float
+  = Celsius String
+  | Fahrenheit String
 
 update : Msg -> Model -> Model
-update msg _ =
+update msg model =
   case msg of
     Celsius c ->
-      c
+      { model | celsius = c }
     Fahrenheit f ->
-      celsiusFromFahrenheit f
+      { model | fahrenheit = f }
 
 view : Model -> Html Msg
 view model =
   div []
     [ input
-        [ onInput (Celsius << Maybe.withDefault 0 << String.toFloat)
-        , value (String.fromFloat model)
+        [ onInput Celsius
+        , value model.celsius
         ]
         []
     , text "Celsius"
@@ -62,8 +70,8 @@ view model =
         [ style "padding" "0 10px" ]
         [ text "=" ]
     , input
-        [ onInput (Fahrenheit << Maybe.withDefault 0 << String.toFloat)
-        , value (String.fromFloat <| fahrenheitFromCelsius <| model)
+        [ onInput Fahrenheit
+        , value model.fahrenheit
         ]
         []
     , text "Fahrenheit"
