@@ -40,7 +40,7 @@ type Msg
   | Fahrenheit Float
 
 update : Msg -> Model -> Model
-update msg model =
+update msg _ =
   case msg of
     Celsius c ->
       c
@@ -51,16 +51,18 @@ view : Model -> Html Msg
 view model =
   div []
     [ input
-      [ onInput (Celsius << Maybe.withDefault 0 << String.toFloat)
-      , value (String.fromFloat model)
-      ]
-      []
+        [ onInput (Celsius << Maybe.withDefault 0 << String.toFloat)
+        , value (String.fromFloat model)
+        ]
+        []
     , text "Celsius"
-    , span [ style "padding" "0 10px" ] [ text "=" ]
+    , span
+        [ style "padding" "0 10px" ]
+        [ text "=" ]
     , input
-      [ onInput (Fahrenheit << Maybe.withDefault 0 << String.toFloat)
-      , value (String.fromFloat <| fahrenheitFromCelsius <| model)
-      ]
-      []
+        [ onInput (Fahrenheit << Maybe.withDefault 0 << String.toFloat)
+        , value (String.fromFloat <| fahrenheitFromCelsius <| model)
+        ]
+        []
     , text "Fahrenheit"
     ]
