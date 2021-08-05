@@ -6,13 +6,21 @@ Initially, the value in T is “0” and each click of B increases the value in 
 module Timer exposing (..)
 
 import Browser
-import Html exposing (Html, div, text)
+import Html exposing (div, text, button)
+import Html.Events exposing (onClick)
 
 main =
   Browser.sandbox { init = 0, update = update, view = view }
 
+type Msg = Increment
+
 update msg model =
-  0
+  case msg of
+    Increment ->
+      model + 1
 
 view model =
-  div [] [ text "Hello" ]
+  div []
+    [ div [] [ text (String.fromInt model) ]
+    , button [ onClick Increment ] [ text "Count" ]
+    ]
