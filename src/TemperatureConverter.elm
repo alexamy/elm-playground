@@ -30,13 +30,11 @@ main =
   Browser.sandbox { init = init, update = update, view = view }
 
 type alias Model =
-  { celsius: Float
-  }
+  Float
 
 init : Model
 init =
-  { celsius = 0.0
-  }
+  0.0
 
 type Msg
   = Celsius Float
@@ -50,16 +48,16 @@ update : Msg -> Model -> Model
 update msg model =
   case msg of
     Celsius c ->
-      { model | celsius = c }
+      c
     Fahrenheit f ->
-      { model | celsius = celsiusFromFahrenheit f }
+      celsiusFromFahrenheit f
 
 view : Model -> Html Msg
 view model =
   div []
-    [ input [ onInput (toFloat Celsius), value (String.fromFloat model.celsius) ] []
+    [ input [ onInput (toFloat Celsius), value (String.fromFloat model) ] []
     , text "Celsius"
     , span [ style "padding" "0 10px" ] [ text "=" ]
-    , input [ onInput (toFloat Fahrenheit), value (String.fromFloat (fahrenheitFromCelsius model.celsius)) ] []
+    , input [ onInput (toFloat Fahrenheit), value (String.fromFloat (fahrenheitFromCelsius model)) ] []
     , text "Fahrenheit"
     ]
