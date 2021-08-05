@@ -10,7 +10,7 @@ and the dual direction is F = C * (9/5) + 32.
 module TemperatureConverter exposing (..)
 
 import Browser
-import Html exposing (div, text, span, input)
+import Html exposing (Html, div, text, span, input)
 import Html.Attributes exposing (value)
 import Html.Attributes exposing (style)
 
@@ -28,6 +28,7 @@ type alias Model =
   , fahrenheit: Float
   }
 
+init : Model
 init =
   { celsius = 0.0
   , fahrenheit = celsiusFromFahrenheit 0.0
@@ -37,9 +38,11 @@ type Msg
   = Celsius Float
   | Fahrenheit Float
 
+update : Msg -> Model -> Model
 update msg model =
   model
 
+view : Model -> Html Msg
 view model =
   div []
     [ input [ value (String.fromFloat model.celsius) ] []
