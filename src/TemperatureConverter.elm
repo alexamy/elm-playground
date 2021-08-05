@@ -57,7 +57,9 @@ canParse s =
 
 tryParse : String -> (Float -> Float) -> String -> String
 tryParse v conversion default =
-  if canParse v then String.fromFloat <| conversion <| Maybe.withDefault 0 <| String.toFloat <| v else default
+  case String.toFloat v of
+     Just f -> String.fromFloat <| conversion <| f
+     Nothing -> default
 
 update : Msg -> Model -> Model
 update msg model =
