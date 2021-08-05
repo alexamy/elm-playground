@@ -55,9 +55,17 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div []
-    [ input [ onInput (toFloat Celsius), value (String.fromFloat model) ] []
+    [ input
+      [ onInput (toFloat Celsius)
+      , value (String.fromFloat model)
+      ]
+      []
     , text "Celsius"
     , span [ style "padding" "0 10px" ] [ text "=" ]
-    , input [ onInput (toFloat Fahrenheit), value (String.fromFloat (fahrenheitFromCelsius model)) ] []
+    , input
+      [ onInput (toFloat Fahrenheit)
+      , value (String.fromFloat (fahrenheitFromCelsius model))
+      ]
+      []
     , text "Fahrenheit"
     ]
