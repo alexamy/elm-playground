@@ -5,11 +5,6 @@ When the user enters a numerical value into TC the corresponding value in TF is 
 When the user enters a non-numerical string into TC the value in TF is not updated and vice versa.
 The formula for converting a temperature C in Celsius into a temperature F in Fahrenheit is C = (F - 32) * (5/9)
 and the dual direction is F = C * (9/5) + 32.
-
----I will skip that part---
-When the user enters a non-numerical string into TC the value in TF is not updated and vice versa.
-
-Why do I need to have non-meaningful values anyway?
 -}
 
 module TemperatureConverter exposing (..)
@@ -17,8 +12,7 @@ module TemperatureConverter exposing (..)
 import Browser
 import Html exposing (Html, div, text, span, input)
 import Html.Attributes exposing (value, style)
-import Html.Events exposing (onInput)
-import Html.Events exposing (onFocus)
+import Html.Events exposing (onInput, onFocus)
 
 celsiusFromFahrenheit : Float -> Float
 celsiusFromFahrenheit f =
@@ -48,12 +42,6 @@ init =
 type Msg
   = Celsius String
   | Fahrenheit String
-
-canParse : String -> Bool
-canParse s =
-  case String.toFloat s of
-     Just _ -> True
-     Nothing -> False
 
 tryParseWith : (Float -> Float) -> String -> String -> String
 tryParseWith conversion default value =
