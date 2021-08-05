@@ -14,10 +14,11 @@ import Html exposing (div, text, span, input)
 import Html.Attributes exposing (value)
 import Html.Attributes exposing (style)
 
-initState = 0
-
 main =
-  Browser.sandbox { init = initState, update = update, view = view }
+  Browser.sandbox { init = init, update = update, view = view }
+
+init =
+  0
 
 update msg model =
   model
