@@ -18,7 +18,6 @@ import Browser
 import Html exposing (Html, div, text, span, input)
 import Html.Attributes exposing (value, style)
 import Html.Events exposing (onInput)
-import Debug exposing (toString)
 
 celsiusFromFahrenheit : Float -> Float
 celsiusFromFahrenheit f =
@@ -41,8 +40,8 @@ initCelsius = 0.0
 
 init : Model
 init =
-  { celsius = toString initCelsius,
-    fahrenheit = toString <| fahrenheitFromCelsius <| initCelsius
+  { celsius = String.fromFloat initCelsius,
+    fahrenheit = String.fromFloat <| fahrenheitFromCelsius <| initCelsius
   }
 
 type Msg
