@@ -49,18 +49,23 @@ type Msg
   = Celsius String
   | Fahrenheit String
 
+canParse : String -> Bool
+canParse s =
+  case String.toFloat s of
+     Just _ -> True
+     Nothing -> False
+
+tryParse : String -> (Float -> Float) -> String -> String
+tryParse v conversion default =
+  if canParse v then String.fromFloat <| conversion <| Maybe.withDefault 0 <| String.toFloat <| v else default
+
 update : Msg -> Model -> Model
 update msg model =
   case msg of
     Celsius c ->
-      { model | celsius = c, fahrenheit = if tryParse c then String.fromFloat <| fahrenheitFromCelsius <| Maybe.withDefault 0 <| String.toFloat <| c else model.fahrenheit }
+      { model | celsius = c, fahrenheit = tryParse c fahrenheitFromCelsius model.fahrenheit }
     Fahrenheit f ->
-      { model | fahrenheit = f, celsius = if tryParse f then String.fromFloat <| celsiusFromFahrenheit <| Maybe.withDefault 0 <| String.toFloat <| f else model.celsius }
-
-tryParse s =
-  case String.toFloat s of
-     Just f -> True
-     Nothing -> False
+      { model | fahrenheit = f, celsius = tryParse f celsiusFromFahrenheit model.celsius }
 
 view : Model -> Html Msg
 view model =
