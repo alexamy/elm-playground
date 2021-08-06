@@ -15,21 +15,26 @@ module FlightBooker exposing (..)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (style)
+import Html.Events exposing (onInput)
+import Html.Attributes exposing (value)
 
 main =
   Browser.sandbox { init = init, update = update, view = view }
 
 type alias Model =
-  {}
+  String
+
 init : Model
 init =
-  {}
+  ""
 
-type Msg = Never
+type Msg
+  = Select String
 
 update : Msg -> Model -> Model
 update msg model =
-  model
+  case msg of
+     Select s -> s
 
 formAttributes =
   [ style "display" "flex"
@@ -42,12 +47,12 @@ view model =
   form
     formAttributes
     [ select
-        []
+        [ onInput Select ]
         [ option [] [ text "one-way flight" ]
         , option [] [ text "return flight" ]
         ]
     , input
-        []
+        [ value model ]
         []
     , input
         []
