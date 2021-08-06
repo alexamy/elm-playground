@@ -49,12 +49,20 @@ update msg model =
     Celsius c ->
       { model
       | celsius = c
-      , fahrenheit = Maybe.withDefault model.fahrenheit <| Maybe.map (String.fromFloat << fahrenheitFromCelsius) <| String.toFloat c
+      , fahrenheit = c
+          |> String.toFloat
+          |> Maybe.map fahrenheitFromCelsius
+          |> Maybe.map String.fromFloat
+          |> Maybe.withDefault model.fahrenheit
       }
     Fahrenheit f ->
       { model
       | fahrenheit = f
-      , celsius = Maybe.withDefault model.celsius <| Maybe.map (String.fromFloat << celsiusFromFahrenheit) <| String.toFloat f
+      , celsius = f
+          |> String.toFloat
+          |> Maybe.map celsiusFromFahrenheit
+          |> Maybe.map String.fromFloat
+          |> Maybe.withDefault model.celsius
       }
 
 view : Model -> Html Msg
