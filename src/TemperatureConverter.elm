@@ -43,19 +43,19 @@ type Msg
   = Celsius String
   | Fahrenheit String
 
-tryParseWith : (Float -> Float) -> String -> String -> String
-tryParseWith conversion default value =
-  case String.toFloat value of
-     Just f -> f |> conversion |> String.fromFloat
-     Nothing -> default
-
 update : Msg -> Model -> Model
 update msg model =
   case msg of
     Celsius c ->
-      { model | celsius = c, fahrenheit = tryParseWith fahrenheitFromCelsius model.fahrenheit c }
+      { model
+      | celsius = c
+      , fahrenheit = Maybe.withDefault model.fahrenheit <| Maybe.map (String.fromFloat << fahrenheitFromCelsius) <| String.toFloat c
+      }
     Fahrenheit f ->
-      { model | fahrenheit = f, celsius = tryParseWith celsiusFromFahrenheit model.celsius f }
+      { model
+      | fahrenheit = f
+      , celsius = Maybe.withDefault model.celsius <| Maybe.map (String.fromFloat << celsiusFromFahrenheit) <| String.toFloat f
+      }
 
 view : Model -> Html Msg
 view model =
