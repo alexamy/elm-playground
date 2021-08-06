@@ -11,9 +11,10 @@ Initially, C has the value “one-way flight” and T1 as well as T2 have the sa
 -}
 
 module FlightBooker exposing (..)
+
 import Browser
-import Html exposing (Html)
-import Html exposing (div)
+import Html exposing (..)
+import Html.Attributes exposing (style)
 
 main =
   Browser.sandbox { init = init, update = update, view = view }
@@ -30,6 +31,28 @@ update : Msg -> Model -> Model
 update msg model =
   model
 
+formAttributes =
+  [ style "display" "flex"
+  , style "flex-direction" "column"
+  , style "width" "200px"
+  ]
+
 view : Model -> Html Msg
 view model =
-  div [] []
+  form
+    formAttributes
+    [ select
+        []
+        [ option [] [ text "one-way flight" ]
+        , option [] [ text "return flight" ]
+        ]
+    , input
+        []
+        []
+    , input
+        []
+        []
+    , button
+        []
+        [ text "Book" ]
+    ]
