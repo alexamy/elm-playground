@@ -39,19 +39,22 @@ flightFromString s =
     _ -> Nothing
 
 type alias Model =
-  String
+  { status: Flight
+  }
 
 init : Model
 init =
-  ""
+  { status = OneWay
+  }
 
 type Msg
   = Select String
 
 update : Msg -> Model -> Model
-update msg model =
-  case msg of
-     Select s -> s
+update (Select msg) model =
+  case flightFromString msg of
+    Just f -> { model | status = f }
+    Nothing -> model
 
 formAttributes : List (Attribute msg)
 formAttributes =
@@ -70,7 +73,7 @@ view model =
         , option [] [ text (flightToString Return) ]
         ]
     , input
-        [ value model ]
+        [ value (flightToString model.status) ]
         []
     , input
         []
