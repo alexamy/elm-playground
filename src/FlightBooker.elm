@@ -25,11 +25,18 @@ type Flight
   = OneWay
   | Return
 
-flightText : Flight -> String
-flightText f =
+flightToString : Flight -> String
+flightToString f =
   case f of
     OneWay -> "one-way flight"
     Return -> "return flight"
+
+flightFromString : String -> Maybe Flight
+flightFromString s =
+  case s of
+    "one-way flight" -> Just OneWay
+    "return flight" -> Just Return
+    _ -> Nothing
 
 type alias Model =
   String
@@ -46,6 +53,7 @@ update msg model =
   case msg of
      Select s -> s
 
+formAttributes : List (Attribute msg)
 formAttributes =
   [ style "display" "flex"
   , style "flex-direction" "column"
@@ -58,8 +66,8 @@ view model =
     formAttributes
     [ select
         [ onInput Select ]
-        [ option [] [ text (flightText OneWay) ]
-        , option [] [ text (flightText Return) ]
+        [ option [] [ text (flightToString OneWay) ]
+        , option [] [ text (flightToString Return) ]
         ]
     , input
         [ value model ]
