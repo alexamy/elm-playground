@@ -21,6 +21,16 @@ import Html.Attributes exposing (value)
 main =
   Browser.sandbox { init = init, update = update, view = view }
 
+type Flight
+  = OneWay
+  | Return
+
+flightText : Flight -> String
+flightText f =
+  case f of
+    OneWay -> "one-way flight"
+    Return -> "return flight"
+
 type alias Model =
   String
 
@@ -48,8 +58,8 @@ view model =
     formAttributes
     [ select
         [ onInput Select ]
-        [ option [] [ text "one-way flight" ]
-        , option [] [ text "return flight" ]
+        [ option [] [ text (flightText OneWay) ]
+        , option [] [ text (flightText Return) ]
         ]
     , input
         [ value model ]
