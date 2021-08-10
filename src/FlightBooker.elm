@@ -18,25 +18,11 @@ import Html.Attributes exposing (style)
 import Html.Events exposing (onInput)
 import Html.Attributes exposing (value)
 
+import Flight exposing (Flight)
+
 main =
   Browser.sandbox { init = init, update = update, view = view }
 
-type Flight
-  = OneWay
-  | Return
-
-flightToString : Flight -> String
-flightToString f =
-  case f of
-    OneWay -> "one-way flight"
-    Return -> "return flight"
-
-flightFromString : String -> Maybe Flight
-flightFromString s =
-  case s of
-    "one-way flight" -> Just OneWay
-    "return flight" -> Just Return
-    _ -> Nothing
 
 type alias Model =
   { status: Flight
@@ -44,7 +30,7 @@ type alias Model =
 
 init : Model
 init =
-  { status = OneWay
+  { status = Flight.OneWay
   }
 
 type Msg
@@ -52,7 +38,7 @@ type Msg
 
 update : Msg -> Model -> Model
 update (Select msg) model =
-  case flightFromString msg of
+  case Flight.fromString msg of
     Just f -> { model | status = f }
     Nothing -> model
 
@@ -69,11 +55,11 @@ view model =
     formAttributes
     [ select
         [ onInput Select ]
-        [ option [] [ text (flightToString OneWay) ]
-        , option [] [ text (flightToString Return) ]
+        [ option [] [ text (Flight.toString Flight.OneWay) ]
+        , option [] [ text (Flight.toString Flight.Return) ]
         ]
     , input
-        [ value (flightToString model.status) ]
+        [ value (Flight.toString model.status) ]
         []
     , input
         []
