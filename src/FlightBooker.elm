@@ -20,6 +20,7 @@ import Html.Attributes exposing (value)
 
 import Flight exposing (Flight)
 
+main : Program () Model Msg
 main =
   Browser.sandbox { init = init, update = update, view = view }
 
