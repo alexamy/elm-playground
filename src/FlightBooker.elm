@@ -50,16 +50,15 @@ formAttributes =
   , style "width" "200px"
   ]
 
-flightOption : Flight -> Html msg
-flightOption f = option [] [ text (Flight.toString f) ]
-
 view : Model -> Html Msg
 view model =
   form
     formAttributes
     [ select
         [ onInput Select ]
-        (List.map flightOption [Flight.OneWay, Flight.Return])
+        [ option [] [ text (Flight.toString Flight.OneWay) ]
+        , option [] [ text (Flight.toString Flight.Return) ]
+        ]
     , input
         [ value (Flight.toString model.status) ]
         []
