@@ -13,17 +13,20 @@ Initially, C has the value “one-way flight” and T1 as well as T2 have the sa
 module FlightBooker exposing (..)
 
 import Browser
+import List exposing (all)
 import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onInput)
 import Html.Attributes exposing (value, disabled)
 
+import Date
 import Flight exposing (Flight)
 
 main : Program () Model Msg
 main =
   Browser.sandbox { init = init, update = update, view = view }
 
+-- TYPES
 
 type alias Model =
   { status: Flight
@@ -34,14 +37,16 @@ type alias Model =
 init : Model
 init =
   { status = Flight.OneWay
-  , startDate = "01.01.2021"
-  , returnDate = "01.01.2021"
+  , startDate = "2021-01-01"
+  , returnDate = "2021-01-01"
   }
 
 type Msg
   = Select String
   | SetStart String
   | SetReturn String
+
+-- UPDATE
 
 update : Msg -> Model -> Model
 update msg model =
@@ -52,6 +57,22 @@ update msg model =
       case Flight.fromString kind of
         Just f -> { model | status = f }
         Nothing -> model
+
+-- DATE
+
+isDate : String -> Bool
+isDate dateString =
+  case Date.fromIsoString dateString of
+    Ok _ -> True
+    Err _ -> False
+
+buttonEnabled : Model -> Bool
+buttonEnabled model =
+  case model.status of
+    Flight.OneWay -> all isDate [model.startDate, model.returnDate]
+    Flight.Return -> isDate model.startDate
+
+-- VIEW
 
 formAttributes : List (Attribute msg)
 formAttributes =
@@ -81,6 +102,6 @@ view model =
         ]
         []
     , button
-        []
+        [ disabled (model |> buttonEnabled |> not) ]
         [ text "Book" ]
     ]
