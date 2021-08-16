@@ -66,13 +66,13 @@ isDate dateString =
     Ok _ -> True
     Err _ -> False
 
+-- VIEW
+
 buttonEnabled : Model -> Bool
 buttonEnabled model =
   case model.status of
     Flight.OneWay -> all isDate [model.startDate, model.returnDate]
     Flight.Return -> isDate model.startDate
-
--- VIEW
 
 formAttributes : List (Attribute msg)
 formAttributes =
@@ -80,6 +80,13 @@ formAttributes =
   , style "flex-direction" "column"
   , style "width" "200px"
   ]
+
+type alias Color = String
+inputBackground : String -> Attribute msg
+inputBackground s =
+  case Date.fromIsoString s of
+    Ok _ -> style "" ""
+    Err _ -> style "background" "#e84118"
 
 view : Model -> Html Msg
 view model =
@@ -93,12 +100,14 @@ view model =
     , input
         [ value (model.startDate)
         , onInput SetStart
+        , inputBackground model.startDate
         ]
         []
     , input
         [ value (model.returnDate)
         , disabled (model.status == Flight.Return)
         , onInput SetReturn
+        , inputBackground model.returnDate
         ]
         []
     , button
