@@ -124,14 +124,6 @@ buttonEnabled model =
     Flight.OneWay -> isDate model.startDate
     Flight.Return -> (all isDate [model.startDate, model.returnDate]) && (isProperDateOrder model.startDate model.returnDate)
 
-formAttributes : List (Attribute msg)
-formAttributes =
-  [ style "display" "flex"
-  , style "flex-direction" "column"
-  , style "width" "200px"
-  ]
-
-type alias Color = String
 inputBackground : String -> Attribute msg
 inputBackground s =
   case Date.fromIsoString s of
@@ -151,7 +143,10 @@ returnInputBackground model =
 view : Model -> Html Msg
 view model =
   form
-    formAttributes
+    [ style "display" "flex"
+    , style "flex-direction" "column"
+    , style "width" "200px"
+    ]
     [ select
         [ onInput Select
         ]
