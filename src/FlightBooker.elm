@@ -128,30 +128,27 @@ isProperDateOrder s1 s2 =
 
 -- VIEW
 
-noAttribute : Attribute msg
-noAttribute = style "" ""
-
 buttonEnabled : Model -> Bool
 buttonEnabled model =
   case model.status of
     Flight.OneWay -> isDate model.startDate
     Flight.Return -> (all isDate [model.startDate, model.returnDate]) && (isProperDateOrder model.startDate model.returnDate)
 
-inputBackground : String -> Attribute msg
+inputBackground : String -> String
 inputBackground s =
   case Date.fromIsoString s of
-    Ok _ -> noAttribute
-    Err _ -> style "background" "#e84118"
+    Ok _ -> ""
+    Err _ -> "#e84118"
 
 startInputBackground : Model -> Attribute msg
 startInputBackground model =
-  inputBackground model.startDate
+  style "background" (inputBackground model.startDate)
 
 returnInputBackground : Model -> Attribute msg
 returnInputBackground model =
   case model.status of
-    Flight.OneWay -> noAttribute
-    Flight.Return -> inputBackground model.returnDate
+    Flight.OneWay -> style "" ""
+    Flight.Return -> style "background" (inputBackground model.returnDate)
 
 view : Model -> Html Msg
 view model =
