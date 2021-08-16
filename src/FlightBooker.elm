@@ -16,7 +16,7 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onInput)
-import Html.Attributes exposing (value)
+import Html.Attributes exposing (value, disabled)
 
 import Flight exposing (Flight)
 
@@ -27,21 +27,31 @@ main =
 
 type alias Model =
   { status: Flight
+  , startDate: String
+  , returnDate: String
   }
 
 init : Model
 init =
   { status = Flight.OneWay
+  , startDate = "01.01.2021"
+  , returnDate = "01.01.2021"
   }
 
 type Msg
   = Select String
+  | SetStart String
+  | SetReturn String
 
 update : Msg -> Model -> Model
-update (Select msg) model =
-  case Flight.fromString msg of
-    Just f -> { model | status = f }
-    Nothing -> model
+update msg model =
+  case msg of
+    SetStart date -> { model | startDate = date }
+    SetReturn date -> { model | returnDate = date }
+    Select kind ->
+      case Flight.fromString kind of
+        Just f -> { model | status = f }
+        Nothing -> model
 
 formAttributes : List (Attribute msg)
 formAttributes =
@@ -60,10 +70,15 @@ view model =
         , option [] [ text (Flight.toString Flight.Return) ]
         ]
     , input
-        [ value (Flight.toString model.status) ]
+        [ value (model.startDate)
+        , onInput SetStart
+        ]
         []
     , input
-        []
+        [ value (model.returnDate)
+        , disabled (model.status == Flight.Return)
+        , onInput SetReturn
+        ]
         []
     , button
         []
