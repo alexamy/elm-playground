@@ -45,16 +45,14 @@ type alias Model =
   , returnDate: String
   }
 
-initModel : Model
-initModel =
-  { status = Flight.OneWay
-  , startDate = "2021-01-01"
-  , returnDate = "2021-01-01"
-  }
-
 init : () -> (Model, Cmd Msg)
 init _ =
-  (initModel, Cmd.none)
+  ( { status = Flight.OneWay
+    , startDate = "2021-01-01"
+    , returnDate = "2021-01-01"
+    }
+  , Cmd.none
+  )
 
 type Msg
   = Select String
@@ -67,13 +65,28 @@ type Msg
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Book -> (model, showAlert (bookMessage model))
-    SetStart date -> ({ model | startDate = date }, Cmd.none)
-    SetReturn date -> ({ model | returnDate = date }, Cmd.none)
+    Book ->
+      ( model
+      , showAlert (bookMessage model)
+      )
+    SetStart date ->
+      ( { model | startDate = date }
+      , Cmd.none
+      )
+    SetReturn date ->
+      ( { model | returnDate = date }
+      , Cmd.none
+      )
     Select kind ->
       case Flight.fromString kind of
-        Just f -> ({ model | status = f }, Cmd.none)
-        Nothing -> (model, Cmd.none)
+        Just f ->
+          ( { model | status = f }
+          , Cmd.none
+          )
+        Nothing ->
+          ( model
+          , Cmd.none
+          )
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
