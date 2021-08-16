@@ -70,15 +70,18 @@ isProperDateOrder : String -> String -> Bool
 isProperDateOrder s1 s2 =
   case Result.map2 Date.compare (Date.fromIsoString s1) (Date.fromIsoString s2) of
     Err _ -> False
-    Ok order -> order == LT
+    Ok order -> order /= GT
 
 -- VIEW
+
+noAttribute : Attribute msg
+noAttribute = style "" ""
 
 buttonEnabled : Model -> Bool
 buttonEnabled model =
   case model.status of
-    Flight.OneWay -> (all isDate [model.startDate, model.returnDate]) && (isProperDateOrder model.startDate model.returnDate)
-    Flight.Return -> isDate model.startDate
+    Flight.OneWay -> isDate model.startDate
+    Flight.Return -> (all isDate [model.startDate, model.returnDate]) && (isProperDateOrder model.startDate model.returnDate)
 
 formAttributes : List (Attribute msg)
 formAttributes =
@@ -86,9 +89,6 @@ formAttributes =
   , style "flex-direction" "column"
   , style "width" "200px"
   ]
-
-noAttribute : Attribute msg
-noAttribute = style "" ""
 
 type alias Color = String
 inputBackground : String -> Attribute msg
@@ -104,8 +104,8 @@ startInputBackground model =
 returnInputBackground : Model -> Attribute msg
 returnInputBackground model =
   case model.status of
-    Flight.OneWay -> inputBackground model.returnDate
-    Flight.Return -> noAttribute
+    Flight.OneWay -> noAttribute
+    Flight.Return -> inputBackground model.returnDate
 
 view : Model -> Html Msg
 view model =
@@ -124,7 +124,7 @@ view model =
         []
     , input
         [ value (model.returnDate)
-        , disabled (model.status == Flight.Return)
+        , disabled (model.status == Flight.OneWay)
         , onInput SetReturn
         , returnInputBackground model
         ]
