@@ -24,7 +24,12 @@ import Flight exposing (Flight)
 
 main : Program () Model Msg
 main =
-  Browser.sandbox { init = init, update = update, view = view }
+  Browser.element
+    { init = init
+    , update = update
+    , view = view
+    , subscriptions = subscriptions
+    }
 
 -- TYPES
 
@@ -34,12 +39,16 @@ type alias Model =
   , returnDate: String
   }
 
-init : Model
-init =
+initModel : Model
+initModel =
   { status = Flight.OneWay
   , startDate = "2021-01-01"
   , returnDate = "2021-01-01"
   }
+
+init : () -> (Model, Cmd Msg)
+init _ =
+  (initModel, Cmd.none)
 
 type Msg
   = Select String
@@ -48,15 +57,21 @@ type Msg
 
 -- UPDATE
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    SetStart date -> { model | startDate = date }
-    SetReturn date -> { model | returnDate = date }
+    SetStart date -> ({ model | startDate = date }, Cmd.none)
+    SetReturn date -> ({ model | returnDate = date }, Cmd.none)
     Select kind ->
       case Flight.fromString kind of
-        Just f -> { model | status = f }
-        Nothing -> model
+        Just f -> ({ model | status = f }, Cmd.none)
+        Nothing -> (model, Cmd.none)
+
+-- SUBSCRIPTIONS
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+  Sub.none
 
 -- DATE
 
