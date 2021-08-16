@@ -10,7 +10,7 @@ When clicking B a message is displayed informing the user of his selection
 Initially, C has the value “one-way flight” and T1 as well as T2 have the same (arbitrary) date (it is implied that T2 is disabled).
 -}
 
-module FlightBooker exposing (..)
+port module FlightBooker exposing (..)
 
 import Browser
 import List exposing (all)
@@ -21,6 +21,9 @@ import Html.Attributes exposing (value, disabled)
 
 import Date
 import Flight exposing (Flight)
+import Html.Events exposing (onClick)
+
+port showAlert : String -> Cmd msg
 
 main : Program () Model Msg
 main =
@@ -54,12 +57,14 @@ type Msg
   = Select String
   | SetStart String
   | SetReturn String
+  | Book
 
 -- UPDATE
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
+    Book -> (model, showAlert (bookMessage model))
     SetStart date -> ({ model | startDate = date }, Cmd.none)
     SetReturn date -> ({ model | returnDate = date }, Cmd.none)
     Select kind ->
@@ -67,13 +72,31 @@ update msg model =
         Just f -> ({ model | status = f }, Cmd.none)
         Nothing -> (model, Cmd.none)
 
--- SUBSCRIPTIONS
-
 subscriptions : Model -> Sub Msg
 subscriptions _ =
   Sub.none
 
--- DATE
+-- HELPERS
+
+bookMessage : Model -> String
+bookMessage model =
+  case model.status of
+    Flight.OneWay -> String.join " "
+      [ "You have booked a"
+      , (Flight.toString model.status)
+      , "on"
+      , model.startDate
+      , "."
+      ]
+    Flight.Return -> String.join " "
+      [ "You have booked a"
+      , (Flight.toString model.status)
+      , "on"
+      , model.startDate
+      , "to"
+      , model.returnDate
+      , "."
+      ]
 
 isDate : String -> Bool
 isDate dateString =
@@ -145,6 +168,7 @@ view model =
         ]
         []
     , button
-        [ disabled (model |> buttonEnabled |> not) ]
+        [ disabled (model |> buttonEnabled |> not)
+        , onClick Book ]
         [ text "Book" ]
     ]
