@@ -10,6 +10,9 @@ When clicking B a message is displayed informing the user of his selection
 Initially, C has the value “one-way flight” and T1 as well as T2 have the same (arbitrary) date (it is implied that T2 is disabled).
 -}
 
+-- add this under `var app = Elm.FlightBooker.init` in result HTML:
+-- app.ports.showAlert.subscribe(function(msg) { alert(msg); });
+
 port module FlightBooker exposing (..)
 
 import Browser
@@ -81,19 +84,19 @@ subscriptions _ =
 bookMessage : Model -> String
 bookMessage model =
   case model.status of
-    Flight.OneWay -> String.join " "
-      [ "You have booked a"
+    Flight.OneWay -> String.concat
+      [ "You have booked a "
       , (Flight.toString model.status)
-      , "on"
+      , " on "
       , model.startDate
       , "."
       ]
-    Flight.Return -> String.join " "
-      [ "You have booked a"
+    Flight.Return -> String.concat
+      [ "You have booked a "
       , (Flight.toString model.status)
-      , "on"
+      , " on "
       , model.startDate
-      , "to"
+      , " to "
       , model.returnDate
       , "."
       ]
