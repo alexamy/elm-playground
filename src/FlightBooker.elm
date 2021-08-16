@@ -153,25 +153,27 @@ view model =
   form
     formAttributes
     [ select
-        [ onInput Select ]
+        [ onInput Select
+        ]
         [ option [] [ text (Flight.toString Flight.OneWay) ]
         , option [] [ text (Flight.toString Flight.Return) ]
         ]
     , input
-        [ value (model.startDate)
-        , onInput SetStart
+        [ onInput SetStart
+        , value (model.startDate)
         , startInputBackground model
         ]
         []
     , input
-        [ value (model.returnDate)
+        [ onInput SetReturn
+        , value (model.returnDate)
         , disabled (model.status == Flight.OneWay)
-        , onInput SetReturn
         , returnInputBackground model
         ]
         []
     , button
-        [ disabled (model |> buttonEnabled |> not)
-        , onClick Book ]
+        [ onClick Book
+        , disabled (model |> buttonEnabled |> not)
+        ]
         [ text "Book" ]
     ]
