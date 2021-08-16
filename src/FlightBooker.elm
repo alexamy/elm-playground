@@ -81,12 +81,25 @@ formAttributes =
   , style "width" "200px"
   ]
 
+noAttribute : Attribute msg
+noAttribute = style "" ""
+
 type alias Color = String
 inputBackground : String -> Attribute msg
 inputBackground s =
   case Date.fromIsoString s of
-    Ok _ -> style "" ""
+    Ok _ -> noAttribute
     Err _ -> style "background" "#e84118"
+
+startInputBackground : Model -> Attribute msg
+startInputBackground model =
+  inputBackground model.startDate
+
+returnInputBackground : Model -> Attribute msg
+returnInputBackground model =
+  case model.status of
+    Flight.OneWay -> inputBackground model.returnDate
+    Flight.Return -> noAttribute
 
 view : Model -> Html Msg
 view model =
@@ -100,14 +113,14 @@ view model =
     , input
         [ value (model.startDate)
         , onInput SetStart
-        , inputBackground model.startDate
+        , startInputBackground model
         ]
         []
     , input
         [ value (model.returnDate)
         , disabled (model.status == Flight.Return)
         , onInput SetReturn
-        , inputBackground model.returnDate
+        , returnInputBackground model
         ]
         []
     , button
