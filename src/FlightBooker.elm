@@ -120,8 +120,8 @@ isDate dateString =
     Ok _ -> True
     Err _ -> False
 
-isProperDateOrder : String -> String -> Bool
-isProperDateOrder s1 s2 =
+isFirstDateLowerOrEqual : String -> String -> Bool
+isFirstDateLowerOrEqual s1 s2 =
   case Result.map2 Date.compare (Date.fromIsoString s1) (Date.fromIsoString s2) of
     Err _ -> False
     Ok order -> order /= GT
@@ -132,23 +132,25 @@ buttonEnabled : Model -> Bool
 buttonEnabled model =
   case model.status of
     Flight.OneWay -> isDate model.startDate
-    Flight.Return -> (all isDate [model.startDate, model.returnDate]) && (isProperDateOrder model.startDate model.returnDate)
+    Flight.Return ->
+      all isDate [model.startDate, model.returnDate] &&
+      isFirstDateLowerOrEqual model.startDate model.returnDate
 
-inputBackground : String -> String
-inputBackground s =
+inputCheckBackground : String -> String
+inputCheckBackground s =
   case Date.fromIsoString s of
     Ok _ -> ""
     Err _ -> "#e84118"
 
 startInputBackground : Model -> Attribute msg
 startInputBackground model =
-  style "background" (inputBackground model.startDate)
+  style "background" (inputCheckBackground model.startDate)
 
 returnInputBackground : Model -> Attribute msg
 returnInputBackground model =
   case model.status of
     Flight.OneWay -> style "" ""
-    Flight.Return -> style "background" (inputBackground model.returnDate)
+    Flight.Return -> style "background" (inputCheckBackground model.returnDate)
 
 view : Model -> Html Msg
 view model =
