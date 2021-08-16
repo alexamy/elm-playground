@@ -66,12 +66,18 @@ isDate dateString =
     Ok _ -> True
     Err _ -> False
 
+isProperDateOrder : String -> String -> Bool
+isProperDateOrder s1 s2 =
+  case Result.map2 Date.compare (Date.fromIsoString s1) (Date.fromIsoString s2) of
+    Err _ -> False
+    Ok order -> order == LT
+
 -- VIEW
 
 buttonEnabled : Model -> Bool
 buttonEnabled model =
   case model.status of
-    Flight.OneWay -> all isDate [model.startDate, model.returnDate]
+    Flight.OneWay -> (all isDate [model.startDate, model.returnDate]) && (isProperDateOrder model.startDate model.returnDate)
     Flight.Return -> isDate model.startDate
 
 formAttributes : List (Attribute msg)
