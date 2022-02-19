@@ -1,3 +1,4 @@
+{- Helper for Task #3 -}
 module Flight exposing (..)
 
 type Flight

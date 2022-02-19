@@ -1,4 +1,5 @@
-{- Task #3 - Flight Booker
+{-
+Task #3 - Flight Booker
 
 The task is to build a frame containing a combobox C with the two options “one-way flight” and “return flight”,
 two textfields T1 and T2 representing the start and return date, respectively, and a button B for submitting the selected flight.

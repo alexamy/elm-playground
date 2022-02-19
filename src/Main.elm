@@ -1,3 +1,4 @@
+{- Example module  -}
 module Main exposing (..)
 
 import Browser

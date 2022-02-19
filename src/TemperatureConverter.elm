@@ -1,4 +1,6 @@
-{- Task #2
+{-
+Task #2 - Temperature Converter
+
 The task is to build a frame containing two textfields TC and TF representing the temperature in Celsius and Fahrenheit, respectively.
 Initially, both TC and TF are empty.
 When the user enters a numerical value into TC the corresponding value in TF is automatically updated and vice versa.
